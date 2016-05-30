@@ -1,0 +1,31 @@
+#!/usr/bin/env amm
+
+// This script converts Maven dependencies from a pom.xml to sbt dependencies.
+// It is based on the answers of George Pligor and Mike Slinn on http://stackoverflow.com/questions/15430346/
+// - install https://github.com/lihaoyi/Ammonite
+// - make this script executable: chmod +x PomDependenciesToSbt
+// - run it with from your shell (e.g bash):
+// $ ./PomDependenciesToSbt /path/to/pom.xml
+
+import scala.xml._
+import ammonite.ops._
+
+def main(pomPath: String, path: Path = cwd) = {
+  val lines = (XML.load(pomPath) \\ "dependencies") \ "dependency" map { dependency =>
+    val groupId = (dependency \ "groupId").text
+    val artifactId = (dependency \ "artifactId").text
+    val version = (dependency \ "version").text
+    val scope = (dependency \ "scope").text
+    val classifier = (dependency \ "classifier").text
+    val artifactValName: String = artifactId.replaceAll("[-\\.]", "_")
+
+    val scope2 = scope match {
+      case "" => ""
+      case _ => s""" % "$scope""""
+    }
+
+    s"""  "$groupId" % "$artifactId" % "$version"$scope2"""
+  }
+
+  lines.foreach(println)
+}
