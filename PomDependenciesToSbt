@@ -24,8 +24,15 @@ def main(pomPath: String, path: Path = cwd) = {
       case _ => s""" % "$scope""""
     }
 
-    s"""  "$groupId" % "$artifactId" % "$version"$scope2"""
+    val exclusions = (dependency \ "exclusions" \ "exclusion" map { exclusion =>
+      val groupId = (exclusion \ "groupId").text
+      val artifactId = (exclusion \ "artifactId").text
+
+      s"""\n     exclude("$groupId", "$artifactId")"""
+    }).mkString
+
+    s"""  "$groupId" % "$artifactId" % "$version"$scope2$exclusions"""
   }
 
-  lines.foreach(println)
+  println(lines.mkString("", ",\n", "\n"))
 }
