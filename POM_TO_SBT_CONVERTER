@@ -16,7 +16,7 @@ val lines = (XML.load("/pom.xml") \\ "dependencies") \ "dependency" map { depend
     case _ => s""" % "$scope""""
   }
 
-  s"""  "$groupId" %% "$artifactId" % "$version"$scope2"""
+  s"""  "$groupId" % "$artifactId" % "$version"$scope2"""
 }
 
 val buildSbt = io.Source.fromURL("https://raw.githubusercontent.com/mslinn/sbtTemplate/master/build.sbt").mkString
