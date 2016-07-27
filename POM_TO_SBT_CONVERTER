@@ -1,7 +1,9 @@
 import scala.xml._
 
-//build.sbt file
-val lines = (XML.load("/Users/schaganti1/scalaIDE/workspace/fb_Spark_Processor/pom.xml") \\ "dependencies") \ "dependency" map { dependency => 
+
+//build.sbt file  // COMPLETE LOCATION OF YOUR POM FILE THEN GO TO SCALA INSTALLATION IF YOU HAVE NOT SET THE SCALA CLASSPATH
+// THEN EXECUTE THE 
+val lines = (XML.load("/pom.xml") \\ "dependencies") \ "dependency" map { dependency => 
   val groupId = (dependency \ "groupId").text
   val artifactId = (dependency \ "artifactId").text
   val version = (dependency \ "version").text
